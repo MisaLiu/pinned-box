@@ -9,7 +9,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./boxes/netease-music
+    working-directory: './boxes/netease-music'
 
 jobs:
   update-gist:
@@ -21,7 +21,16 @@ jobs:
       USER_ID: ${{ vars.USER_ID }}
       USER_TOKEN: ${{ secrets.USER_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
-      - run: yarn install
-      - name: Update gist
-        uses: ./
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 12
+
+      - name: 'Install dependencies'
+        run: npm install
+
+      - name: 'Update gist'
+        uses: node index.js
