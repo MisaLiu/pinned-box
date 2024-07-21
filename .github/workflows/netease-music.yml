@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'boxes/netease-music'
+      - '.github/workflows/netease-music.yml'
   schedule:
     - cron: "0 0 * * *"
 

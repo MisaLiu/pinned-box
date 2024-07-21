@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'boxes/steam'
+      - '.github/workflows/steam.yml'
   schedule:
     - cron: "0 * * * *"
 
