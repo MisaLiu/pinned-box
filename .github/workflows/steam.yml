@@ -2,8 +2,8 @@ name: 'Update Steam box'
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - 'boxes/steam'
   schedule:
     - cron: "0 * * * *"
 

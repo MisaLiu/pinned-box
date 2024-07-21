@@ -2,8 +2,8 @@ name: 'Update Netease Cloudmusic box'
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - 'boxes/netease-music'
   schedule:
     - cron: "0 0 * * *"
 
@@ -33,4 +33,4 @@ jobs:
         run: npm install
 
       - name: 'Update gist'
-        uses: node index.js
+        run: node index.js
