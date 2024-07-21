@@ -1,0 +1,27 @@
+name: 'Update Netease Cloudmusic box'
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * *"
+
+defaults:
+  run:
+    working-directory: ./boxes/netease-music
+
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+    environment: netease-music
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GIST_ID: ${{ vars.GIST_ID }}
+      USER_ID: ${{ vars.USER_ID }}
+      USER_TOKEN: ${{ secrets.USER_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn install
+      - name: Update gist
+        uses: ./
