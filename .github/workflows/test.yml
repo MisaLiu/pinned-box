@@ -1,0 +1,15 @@
+name: 'Test action'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-env:
+    runs-on: ubuntu-latest
+    environment: test_env
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Print environment variables'
+        run: echo "${{ toJson(vars) }}"
+      - name: 'Print environment secrets'
+        run: echo "${{ toJson(secrets) }}"
