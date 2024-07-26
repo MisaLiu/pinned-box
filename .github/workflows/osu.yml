@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./boxes/osu
+    working-directory: './boxes/osu'
 
 jobs:
   update:
@@ -33,6 +33,7 @@ jobs:
         with:
           node-version: "lts/*"
           cache: "npm"
+          cache-dependency-path: './boxes/osu/package-lock.json'
 
       - name: Install dependencies
         run: npm install
