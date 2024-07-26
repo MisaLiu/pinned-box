@@ -29,9 +29,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 12
+          cache: "yarn"
+          cache-dependency-path: './boxes/netease-music/yarn.lock'
 
       - name: 'Install dependencies'
-        run: npm install
+        run: |
+          npm install yarn -g
+          yarn install
 
       - name: 'Update gist'
         run: node index.js
