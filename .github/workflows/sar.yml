@@ -1,0 +1,39 @@
+name: 'Update SAR stats box'
+
+on:
+  push:
+    paths:
+      - 'boxes/sar'
+      - '.github/workflows/sar.yml'
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: './boxes/sar'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment: sar
+    env:
+      GIST_ID: ${{ vars.GIST_ID }}
+      SAR_STEAMID: ${{ secrets.SAR_STEAMID }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.14.0"
+          cache: "npm"
+          cache-dependency-path: './boxes/sar/package-lock.json'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update Gist
+        run: npm start
