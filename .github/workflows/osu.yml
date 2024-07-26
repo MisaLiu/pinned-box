@@ -1,0 +1,41 @@
+name: 'Update osu! stats box'
+
+on:
+  push:
+    paths:
+      - 'boxes/osu'
+      - '.github/workflows/osu.yml'
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./boxes/osu
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment: osu
+    env:
+      GIST_ID: ${{ vars.GIST_ID }}
+      OSU_USERNAME: ${{ vars.OSU_USERNAME }}
+      OSU_MODE: ${{ vars.OSU_MODE }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLEINT_SECRET: ${{ secrets.CLIENT_SECRET }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update Gist
+        run: npm start
