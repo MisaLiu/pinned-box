@@ -29,6 +29,7 @@ page.goto(`https://royale.pet/api/player/${SAR_STEAMID}/stats`)
     } catch (e) {
       console.error('Failed to decode server response');
       console.error(e);
+      browser.close().then();
       return;
     }
 
@@ -46,12 +47,6 @@ page.goto(`https://royale.pet/api/player/${SAR_STEAMID}/stats`)
       playTime: 0,
       playCount: 0,
     };
-
-    if (typeof body !== 'object') {
-      console.error('Cannot get player stats');
-      console.error(e.text);
-      return;
-    }
 
     console.log('Generating stats data...');
 
@@ -103,6 +98,13 @@ page.goto(`https://royale.pet/api/player/${SAR_STEAMID}/stats`)
       console.error('Failed to update gist');
       console.error(e);
     });
+
+    browser.close().then();
+  })
+  .catch((e) => {
+    console.error('Something wrong when processing data');
+    console.error(e);
+    browser.close().then();
   });
 
 function numberWithCommas(x) {
