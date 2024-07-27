@@ -1,4 +1,5 @@
-import sa from 'superagent';
+import puppeteer from 'puppeteer-extra';
+import PuppeteerStealthPlugin from 'puppeteer-extra-plugin-stealth';
 import gistBox from 'gist-box';
 
 const { GistBox } = gistBox;
@@ -8,11 +9,29 @@ const {
   GH_TOKEN
 } = process.env;
 
+// Add stealth plugin
+puppeteer.use(PuppeteerStealthPlugin());
+
+// Init headless browser
+const browser = await puppeteer.launch({
+  headless: true,
+  defaultViewport: { width: 1920, height: 1080 },
+});
+
+// Grab content from API
 console.log('Getting player stats data from royale.pet...');
-sa.get(`https://royale.pet/api/player/${SAR_STEAMID}/stats`)
-  .accept('json')
-  .then((e) => {
-    const { body } = e;
+const page = await browser.newPage();
+page.goto(`https://royale.pet/api/player/${SAR_STEAMID}/stats`)
+  .then(async (response) => {
+    let body;
+    try {
+      body = await response.json();
+    } catch (e) {
+      console.error('Failed to decode server response');
+      console.error(e);
+      return;
+    }
+
     const result = {
       level: 0,
       exp: 0,
@@ -84,9 +103,6 @@ sa.get(`https://royale.pet/api/player/${SAR_STEAMID}/stats`)
       console.error('Failed to update gist');
       console.error(e);
     });
-  })
-  .catch((e) => {
-    console.error(e);
   });
 
 function numberWithCommas(x) {
