@@ -3,7 +3,7 @@ name: 'Update SAR stats box'
 on:
   push:
     paths:
-      - 'boxes/sar'
+      - 'boxes/sar/**'
       - '.github/workflows/sar.yml'
   schedule:
     - cron: "0 0 * * *"

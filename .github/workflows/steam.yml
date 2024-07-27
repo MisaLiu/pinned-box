@@ -3,7 +3,7 @@ name: 'Update Steam box'
 on:
   push:
     paths:
-      - 'boxes/steam'
+      - 'boxes/steam/**'
       - '.github/workflows/steam.yml'
   schedule:
     - cron: "0 * * * *"

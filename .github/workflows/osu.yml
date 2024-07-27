@@ -3,7 +3,7 @@ name: 'Update osu! stats box'
 on:
   push:
     paths:
-      - 'boxes/osu'
+      - 'boxes/osu/**'
       - '.github/workflows/osu.yml'
   schedule:
     - cron: "0 0 * * *"
