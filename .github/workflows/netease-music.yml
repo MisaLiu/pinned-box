@@ -32,6 +32,12 @@ jobs:
           cache: "yarn"
           cache-dependency-path: './boxes/netease-music/yarn.lock'
 
+      - name: Cache user token
+        uses: actions/cache@v4
+        with:
+          path: './boxes/netease-music/USER_TOKEN'
+          key: box-netease-music-token
+
       - name: 'Install dependencies'
         run: |
           npm install yarn -g

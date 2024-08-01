@@ -1,24 +1,69 @@
 require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
 const { Octokit } = require('@octokit/rest');
-const { user_record } = require('NeteaseCloudMusicApi');
+const { login_status, login_refresh, user_record } = require('NeteaseCloudMusicApi');
 
 const {
   GIST_ID: gistId,
   GH_TOKEN: githubToken,
   USER_ID: userId,
-  USER_TOKEN: userToken,
+  USER_TOKEN,
 } = process.env;
 
 (async () => {
+  let userToken = `MUSIC_U=${USER_TOKEN}`;
+
+  /**
+   * Get cached user token
+   */
+  const userTokenCachedPath = path.join(__dirname, 'USER_TOKEN');
+  if (fs.existsSync(userTokenCachedPath)) {
+    userToken = fs.readFileSync(userTokenCachedPath, { encoding: 'utf8' });
+  }
+
+  /**
+   * Get user login status
+   */
+  console.log('Check login status...');
+  const loginStatus = await login_status({
+    cookie: userToken
+  }).catch(error => {
+    console.error('Cannot get user login status');
+    console.error({ ...error, cookie: [ '...' ] });
+  });
+
+  if (loginStatus) {
+    console.log(`Logged in as ${loginStatus.body.profile.nickname}`);
+  }
+
+  /**
+   * Refresh user token
+   */
+  console.log('Refreshing user token...');
+  const newUserToken = await login_refresh({
+    cookie: userToken,
+  }).catch(error => {
+    console.warn('Cannot refresh user token, skipping');
+    console.warn({ ...error, cookie: [ '...' ] });
+  });
+
+  if (!!newUserToken && !!getCookieByName('MUSIC_U', newUserToken.cookie)) {
+    userToken = getCookieByName('MUSIC_U', newUserToken.cookie);
+    fs.writeFileSync(userTokenCachedPath, userToken, { encoding: 'utf8' });
+  }
+
   /**
    * First, get user record
    */
-
   const record = await user_record({
-    cookie: `MUSIC_U=${userToken}`,
+    cookie: userToken,
     uid: userId,
     type: 1, // last week
-  }).catch(error => console.error(`Unable to get user record \n${error}`));
+  }).catch(error => {
+    console.error('Cannot get user records');
+    console.error({ ...error, cookie: [ '...' ] });
+  });
 
   /**
    * Second, get week play data and parse into song/plays diagram
@@ -74,3 +119,14 @@ const {
     console.error(`Unable to update gist\n${error}`);
   }
 })();
+
+function getCookieByName(name, cookies) {
+  for (const cookie of cookies) {
+    const cookieSplit = cookie.split(/;\s/)[0].split('=');
+    const cookieName = cookieSplit[0];
+    const cookieValue = [ ...cookieSplit.slice(1) ].join('=');
+
+    if (cookieName == name) return `${cookieName}=${cookieValue}`;
+  }
+  return null;
+}
