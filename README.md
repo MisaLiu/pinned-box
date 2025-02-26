@@ -5,6 +5,6 @@
 * `steam`: [YouEclipse/steam-box](https://github.com/YouEclipse/steam-box)
 * `netease-music`: [Leecason/netease-music-box](https://github.com/Leecason/netease-music-box)
 * `osu-box`: [AiverAiva/osu-box](https://github.com/AiverAiva/osu-box)
-* `sar-box`: 自己摸的，数据来源于 [royale.pet](https://royale.pet) <3
+* `sar-box`: 自己摸的，数据来源于 [royale.pet](https://sar.fisk.cc) <3
 
 如果需要更多类似项目，欢迎前往 https://github.com/matchai/awesome-pinned-gists

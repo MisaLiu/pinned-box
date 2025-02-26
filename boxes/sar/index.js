@@ -21,7 +21,7 @@ const browser = await puppeteer.launch({
 // Grab content from API
 console.log('Getting player stats data from royale.pet...');
 const page = await browser.newPage();
-page.goto(`https://royale.pet/api/player/${SAR_STEAMID}/stats`)
+page.goto(`https://sar.fisk.cc/api/player/${SAR_STEAMID}/stats`)
   .then(async (response) => {
     let body;
     try {
